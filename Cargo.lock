@@ -3,6 +3,14 @@
 version = 4
 
 [[package]]
+name = "RustyPoker"
+version = "0.1.0"
+dependencies = [
+ "strum",
+ "strum_macros",
+]
+
+[[package]]
 name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -24,14 +32,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc74d9a594b72ae6656596548f56f667211f8a97b3d4c3d467150794690dc40a"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "rusty_poker"
-version = "0.1.0"
-dependencies = [
- "strum",
- "strum_macros",
 ]
 
 [[package]]

@@ -1,4 +1,4 @@
-use rusty_poker::deck::{ Deck };
+use RustyPoker::deck::{ Deck };
 
 fn main() {
     let deck = Deck::new();
