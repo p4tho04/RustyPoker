@@ -10,8 +10,8 @@ Play poker offline with different NPC difficulty levels or test your ideas by ru
 # 📋 How to Use?
 ### Run program
 ```
-git clone https://github.com/p4tho04/rusty-poker
-cd rusty-poker
+git clone https://github.com/p4tho04/RustyPoker
+cd RustyPoker
 cargo run -- <flags>
 ```
 
