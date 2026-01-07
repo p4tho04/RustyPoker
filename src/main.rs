@@ -5,7 +5,7 @@ fn main() {
 
     deck.shuffle();
 
-    for card in deck.cards {
-        println!("{:?}", card);
+    for card in &deck.cards {
+        println!("{:?}, value: {}", card, card.get_value());
     }
 }
