@@ -1,5 +1,7 @@
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
+use rand::seq::SliceRandom;
+use rand::rng;
 
 #[derive(Debug, EnumIter, Clone)]
 pub enum Suite {
@@ -57,5 +59,9 @@ impl Deck {
         }
 
         Deck { cards }
+    }
+
+    pub fn shuffle(&mut self) {
+        self.cards.shuffle(&mut rng());
     }
 }

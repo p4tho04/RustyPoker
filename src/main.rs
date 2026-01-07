@@ -1,7 +1,9 @@
-use RustyPoker::deck::{ Deck };
+use rusty_poker::deck::{ Deck };
 
 fn main() {
-    let deck = Deck::new();
+    let mut deck = Deck::new();
+
+    deck.shuffle();
 
     for card in deck.cards {
         println!("{:?}", card);
