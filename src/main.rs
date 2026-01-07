@@ -1,11 +1,16 @@
-use rusty_poker::deck::{ Deck };
+use rusty_poker::poker::{ PokerGame };
 
+#[allow(unused_variables, unused_mut)]
 fn main() {
-    let mut deck = Deck::new();
+    let mut game = PokerGame::new(4, 50);
+    game.shuffle_deck();
+    game.deal_cards();
 
-    deck.shuffle();
+    for card in game.deck.cards.iter() {
+        println!("{:?}", card);
+    }
 
-    for card in &deck.cards {
-        println!("{:?}, value: {}", card, card.get_value());
+    for player in game.players {
+        println!("Player {}, {:?}", player.player_num, player);
     }
 }

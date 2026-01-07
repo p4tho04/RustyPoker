@@ -80,6 +80,10 @@ impl Deck {
     }
 
     pub fn shuffle(&mut self) -> () {
-        self.cards.shuffle(&mut rng());
+        self.cards.shuffle(&mut rng())
+    }
+
+    pub fn remove_card(&mut self) -> Card {
+        self.cards.pop().unwrap()
     }
 }
