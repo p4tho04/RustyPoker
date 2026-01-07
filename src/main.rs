@@ -9,8 +9,13 @@ fn main() {
     for card in game.deck.cards.iter() {
         println!("{:?}", card);
     }
+    println!("cards amnt: {}", game.deck.cards.len());
 
-    for player in game.players {
+    for player in game.players.iter() {
         println!("Player {}, {:?}", player.player_num, player);
     }
+
+    game.reset_deck();
+    println!("cards amnt: {}", game.deck.cards.len());
+
 }

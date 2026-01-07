@@ -52,9 +52,13 @@ impl PokerGame {
         self.deck.shuffle();
     }
 
-    // pub fn refill_deck(&mut self) -> () {
+    pub fn reset_deck(&mut self) -> () {
+        let new_deck = Deck::new();
 
-    // }
+        self.deck = new_deck;
+
+        self.shuffle_deck();
+    }
 
     pub fn deal_cards(&mut self) -> () {
         for player in self.players.iter_mut() {
