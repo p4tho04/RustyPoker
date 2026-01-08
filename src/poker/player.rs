@@ -50,7 +50,13 @@ impl Player {
         self.wager += wager_bet_difference;
     }
 
-    pub fn check(&mut self) -> () {
+    pub fn check(&self, current_bet: i32) -> () {
+        if self.wager < current_bet {
+            panic!("You have to bet because your current wager (${}) is less than the current bet (${}).", self.wager, current_bet);
+        }
+    }
+
+    pub fn fold(&mut self) -> () {
         self.active = false;
     }
 }
