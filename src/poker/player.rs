@@ -39,8 +39,8 @@ impl Player {
         self.wager += raise_amnt;
     }
 
-    pub fn call(&mut self, current_bet: i32) {
-        let wager_bet_difference: i32 = current_bet - self.wager;
+    pub fn call(&mut self, current_round_bet: i32) {
+        let wager_bet_difference: i32 = current_round_bet - self.wager;
 
         if wager_bet_difference > self.stack { // can't match current bet size
             panic!("You do not have enough to call! You only have ${} in your stack, you need at least ${} to call.", self.stack, wager_bet_difference);
@@ -50,9 +50,9 @@ impl Player {
         self.wager += wager_bet_difference;
     }
 
-    pub fn check(&self, current_bet: i32) -> () {
-        if self.wager < current_bet {
-            panic!("You have to bet because your current wager (${}) is less than the current bet (${}).", self.wager, current_bet);
+    pub fn check(&self, current_round_bet: i32) -> () {
+        if self.wager < current_round_bet {
+            panic!("You have to bet because your current wager (${}) is less than the current bet (${}).", self.wager, current_round_bet);
         }
     }
 

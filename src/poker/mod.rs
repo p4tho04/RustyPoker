@@ -19,7 +19,7 @@ pub struct PokerGame {
     pub players: Vec<Player>,
     pub pot: i32,
     pub current_stage: Stage,
-    pub current_bet_size: i32,
+    pub current_round_bet: i32,
 }
 
 impl PokerGame {
@@ -46,7 +46,7 @@ impl PokerGame {
             players: players,
             pot: 0,
             current_stage: Stage::Flop,
-            current_bet_size: 0,
+            current_round_bet: 0,
         }
     }
 
