@@ -28,35 +28,48 @@ impl Player {
         self.hand = hand;
     }
 
-    pub fn raise(&mut self, raise_amnt: i32) -> () {
-        if raise_amnt > self.stack {
-            panic!("You raised too much! You only have ${} in your stack, but you raised ${}.", self.stack, raise_amnt);
-        } else if raise_amnt < 1 {
-            panic!("You can't raise less than $1. You raised ${}", raise_amnt);
-        }
-
-        self.stack -= raise_amnt;
-        self.wager += raise_amnt;
+    pub fn fold(&mut self) -> () {
+        self.active = false;
     }
 
-    pub fn call(&mut self, current_round_bet: i32) {
+    pub fn check(&self, current_round_bet: i32) -> Result<i32, String> {
+        if self.wager < current_round_bet {
+            return Err("You have to call or raise because your current wager is less than the current bet".to_string());
+        }
+
+        Ok(0) // add to pot
+    }
+
+    pub fn call(&mut self, current_round_bet: i32) -> Result<i32, String> {
         let wager_bet_difference: i32 = current_round_bet - self.wager;
 
         if wager_bet_difference > self.stack { // can't match current bet size
-            panic!("You do not have enough to call! You only have ${} in your stack, you need at least ${} to call.", self.stack, wager_bet_difference);
+            return Err("You don't have enough in your stack to call!".to_string());
         }
 
         self.stack -= wager_bet_difference;
         self.wager += wager_bet_difference;
-    }
 
-    pub fn check(&self, current_round_bet: i32) -> () {
-        if self.wager < current_round_bet {
-            panic!("You have to bet because your current wager (${}) is less than the current bet (${}).", self.wager, current_round_bet);
+        Ok(wager_bet_difference) // add to pot
+    }
+    
+    pub fn raise(&mut self, raise_amnt: i32, current_round_bet: i32) -> Result<i32, String> {
+        let expected_bet_after_raise = current_round_bet + raise_amnt;
+        let needed_amnt = expected_bet_after_raise - self.wager;
+
+        if raise_amnt > self.stack {
+            return Err("You raised more than you have in your stack!".to_string());
+        } else if raise_amnt < 1 {
+            return Err("You can't raise less than $1!".to_string());
+        } else if self.stack + raise_amnt <= current_round_bet {
+            return Err("You need to raise more to beat the current round bet!".to_string());
+        } else if self.stack < needed_amnt {
+            return Err("You don't have enough money to raise this much!".to_string());
         }
-    }
 
-    pub fn fold(&mut self) -> () {
-        self.active = false;
+        self.stack -= needed_amnt;
+        self.wager += needed_amnt;
+
+        Ok(needed_amnt) // add to pot
     }
 }
