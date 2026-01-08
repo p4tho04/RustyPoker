@@ -39,7 +39,7 @@ impl Card {
         Card { rank, suite }
     }
 
-    pub fn get_value(&self) -> u8 {
+    pub fn get_value(&self) -> i8 {
         match self.rank {
             Rank::Two => 2,
             Rank::Three => 3,

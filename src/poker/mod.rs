@@ -17,12 +17,13 @@ pub struct PokerGame {
     pub deck: Deck,
     pub total_players: usize,
     pub players: Vec<Player>,
-    pub pot: u32,
+    pub pot: i32,
     pub current_stage: Stage,
+    pub current_bet_size: i32,
 }
 
 impl PokerGame {
-    pub fn new(total_players: usize, stack: u32) -> Self {
+    pub fn new(total_players: usize, start_stack: i32) -> Self {
         if  total_players < MIN_PLAYERS || total_players > MAX_PLAYERS {
             panic!("Can only have between {} and {} players. Your input had {} player(s).", MIN_PLAYERS, MAX_PLAYERS, total_players);
         }
@@ -32,8 +33,8 @@ impl PokerGame {
 
         for player_num in 1..=total_players {
             let player: Player = Player::new(
-                stack,
-                player_num as u8,
+                start_stack,
+                player_num as i8,
             );
 
             players.push(player);
@@ -45,6 +46,7 @@ impl PokerGame {
             players: players,
             pot: 0,
             current_stage: Stage::Flop,
+            current_bet_size: 0,
         }
     }
 
@@ -68,6 +70,18 @@ impl PokerGame {
             let hand = vec![card1, card2];
 
             player.deal_new_hand(hand);
+        }
+    }
+
+    pub fn print_players(&self) -> () {
+        for player in self.players.iter() {
+            println!("{:?}", player);
+        }
+    }
+
+    pub fn print_cards(&self) -> () {
+        for card in self.deck.cards.iter() {
+            println!("{:?}", card);
         }
     }
 }
