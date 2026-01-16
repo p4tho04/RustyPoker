@@ -3,7 +3,7 @@ use strum_macros::EnumIter;
 use rand::seq::SliceRandom;
 use rand::rng;
 
-#[derive(Debug, EnumIter, Clone)]
+#[derive(Debug, EnumIter, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Suite {
     Spades,
     Clubs,
@@ -11,7 +11,7 @@ pub enum Suite {
     Diamonds,
 }
 
-#[derive(Debug, EnumIter, Clone)]
+#[derive(Debug, EnumIter, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Rank {
     Two,
     Three,
@@ -28,7 +28,33 @@ pub enum Rank {
     Ace,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum HandRanking {
+    TwoHigh,
+    ThreeHigh,
+    FourHigh,
+    FiveHigh,
+    SixHigh,
+    SevenHigh,
+    EightHigh,
+    NineHigh,
+    TenHigh,
+    JackHigh,
+    QueenHigh,
+    KingHigh,
+    AceHigh,
+    OnePair,
+    TwoPair,
+    ThreeOfAKind,
+    Straight,
+    Flush,
+    FullHouse,
+    FourOfAKind,
+    StraightFlush,
+    RoyalFlush,
+}
+
+#[derive(Debug, Clone)]
 pub struct Card {
     pub rank: Rank,
     pub suite: Suite,
@@ -37,24 +63,6 @@ pub struct Card {
 impl Card {
     pub fn new(rank: Rank, suite: Suite) -> Self {
         Card { rank, suite }
-    }
-
-    pub fn get_value(&self) -> i8 {
-        match self.rank {
-            Rank::Two => 2,
-            Rank::Three => 3,
-            Rank::Four => 4,
-            Rank::Five => 5,
-            Rank::Six => 6,
-            Rank::Seven => 7,
-            Rank::Eight => 8,
-            Rank::Nine => 9,
-            Rank::Ten => 10,
-            Rank::Jack => 11,
-            Rank::Queen => 12,
-            Rank::King => 13,
-            Rank::Ace => 14,
-        }
     }
 }
 

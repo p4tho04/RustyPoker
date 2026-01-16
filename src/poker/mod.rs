@@ -81,7 +81,7 @@ impl PokerGame {
 
             let hand = vec![card1, card2];
 
-            player.deal_new_hand(hand);
+            player.set_new_hand(hand);
         }
     }
 
@@ -129,12 +129,17 @@ impl PokerGame {
         );
 
         println!("Your stack: ${}", user_player.stack);
+        println!("Your wager: ${}", user_player.wager);
         println!("Current round bet: ${}", current_round_bet);
-        println!("Current round bet: ${}", self.pot);
+        println!("Current pot: ${}", self.pot);
         println!("Your hand:");
-        println!("Card 1: {:?} of {:?}", first_card.rank, first_card.suite);
-        println!("Card 2: {:?} of {:?}", second_card.rank, second_card.suite);
+        println!("\t{:?} of {:?}", first_card.rank, first_card.suite);
+        println!("\t{:?} of {:?}", second_card.rank, second_card.suite);
         println!("Community Cards:");
+        for card in self.community_cards.iter() {
+            println!("\t{:?} of {:?}", card.rank, card.suite);
+        }
+        println!("Your best hand: {:?}", user_player.get_best_hand_value(&self.community_cards).unwrap());
 
         'get_action: loop {
             action.clear();

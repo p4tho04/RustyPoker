@@ -14,10 +14,8 @@ fn main() {
     game.river();
 
     game.add_current_round_bet(50);
-    println!("community cards: {:?}", game.community_cards);
 
     game.ask_user_action();
 
     game.print_players();
-
 }

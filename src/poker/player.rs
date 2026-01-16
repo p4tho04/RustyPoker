@@ -1,4 +1,6 @@
-use crate::deck::{ Card };
+use crate::deck::{ Card, HandRanking, Rank };
+use itertools::Itertools;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Player {
@@ -20,7 +22,7 @@ impl Player {
         }
     }
 
-    pub fn deal_new_hand(&mut self, hand: Vec<Card>) -> () {
+    pub fn set_new_hand(&mut self, hand: Vec<Card>) -> () {
         if hand.len() != 2 {
             panic!("Your new hand should be 2 cards. Your input was {} card(s).", hand.len());
         }
@@ -71,5 +73,94 @@ impl Player {
         self.wager += needed_amnt;
 
         Ok(needed_amnt) // add to pot
+    }
+
+    fn evaluate_hand(hand: &[&Card]) -> HandRanking {
+        let mut rank_counts = HashMap::new();
+        let mut suit_counts = HashMap::new();
+
+        // Track count of each suite and rank
+        for card in hand {
+            *rank_counts.entry(card.rank).or_insert(0) += 1;
+            *suit_counts.entry(card.suite).or_insert(0) += 1;
+        }
+
+        // Is a flush if have 5 of any suite
+        let is_flush = suit_counts.values().any(|&c| c == 5);
+
+        // Put all rank values into a list (include duplicates) and sort them
+        let mut ranks: Vec<Rank> = hand.iter().map(|c| c.rank).collect();
+        ranks.sort();
+
+        let is_straight = ranks
+            .windows(2)
+            .all(|w| w[1] as i32 == w[0] as i32 + 1)
+            || ranks == [Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Ace];
+
+        let mut counts: Vec<i32> = rank_counts.values().cloned().collect();
+        counts.sort_by(|a, b| b.cmp(a)); // descending
+
+        // Only evaluates 5 card hands
+        match (is_straight, is_flush, counts.as_slice()) {
+            (true, true, _) if ranks.contains(&Rank::Ace) && ranks.contains(&Rank::King) =>
+                HandRanking::RoyalFlush,
+
+            (true, true, _) =>
+                HandRanking::StraightFlush,
+
+            (_, _, [4, 1]) =>
+                HandRanking::FourOfAKind,
+
+            (_, _, [3, 2]) =>
+                HandRanking::FullHouse,
+
+            (_, true, _) =>
+                HandRanking::Flush,
+
+            (true, _, _) =>
+                HandRanking::Straight,
+
+            (_, _, [3, 1, 1]) =>
+                HandRanking::ThreeOfAKind,
+
+            (_, _, [2, 2, 1]) =>
+                HandRanking::TwoPair,
+
+            (_, _, [2, 1, 1, 1]) =>
+                HandRanking::OnePair,
+
+            _ =>
+                match ranks.iter().max().unwrap() {
+                    Rank::Two => HandRanking::TwoHigh,
+                    Rank::Three => HandRanking::ThreeHigh,
+                    Rank::Four => HandRanking::FourHigh,
+                    Rank::Five => HandRanking::FiveHigh,
+                    Rank::Six => HandRanking::SixHigh,
+                    Rank::Seven => HandRanking::SevenHigh,
+                    Rank::Eight => HandRanking::EightHigh,
+                    Rank::Nine => HandRanking::NineHigh,
+                    Rank::Ten => HandRanking::TenHigh,
+                    Rank::Jack => HandRanking::JackHigh,
+                    Rank::Queen => HandRanking::QueenHigh,
+                    Rank::King => HandRanking::KingHigh,
+                    Rank::Ace => HandRanking::AceHigh,
+                },
+        }
+    }
+
+    pub fn get_best_hand_value(&self, community_cards: &Vec<Card>) -> Result<HandRanking, String> {
+        let mut all_cards: Vec<&Card> = Vec::new();
+        all_cards.extend(community_cards.iter());
+        all_cards.extend(self.hand.iter());
+
+        // Find all possible hands
+        let best_hand = all_cards
+            .into_iter()
+            .combinations(5)
+            .map(|hand| Self::evaluate_hand(hand.as_slice())) // evaluate each possible 5 card hand
+            .max()
+            .unwrap();
+
+        Ok(best_hand)
     }
 }
